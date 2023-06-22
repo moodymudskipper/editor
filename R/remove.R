@@ -9,7 +9,7 @@
 #' @export
 edit_remove <- function(path, selection, style = TRUE) {
   old_code <- readLines(path)
-  new_code <- code_replace(readLines(path), code, {{ selection }}, style)
+  new_code <- code_remove(readLines(path), {{ selection }}, style)
   writeLines(new_code, path)
 }
 
