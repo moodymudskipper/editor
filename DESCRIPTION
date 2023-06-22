@@ -1,0 +1,15 @@
+Package: editor
+Title: Edit scripts programatically
+Version: 0.0.0.9000
+Authors@R: 
+    person("Antoine", "Fabri", , "antoine.fabri@gmail.com", role = c("aut", "cre"))
+Description: A set of functions t easily insert, replace or remove code in/from a script.
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports: 
+    rlang,
+    stringr,
+    tidyselect
