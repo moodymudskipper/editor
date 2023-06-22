@@ -13,3 +13,5 @@ Imports:
     rlang,
     stringr,
     tidyselect
+URL: https://github.com/moodymudskipper/editor
+BugReports: https://github.com/moodymudskipper/editor/issues
