@@ -40,4 +40,8 @@ it has a \code{selection} argument thst might receive a line numbers or calls to
 functions. its \code{fun} and \code{n} arguments are themselves passed internally to \code{expr_defines()}
 to locate the function definition.
 }
+
+When used with \verb{edit_*()}. functions (the only place where these should be used),
+these functions and the stringr helpers \code{boundary()}, \code{coll()}, \code{fixed()} and \code{regex()}
+can be use without attaching the package or using the \code{pkg::fun()} notation.
 }
