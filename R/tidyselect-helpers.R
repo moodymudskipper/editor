@@ -14,6 +14,11 @@
 #'   it has a `selection` argument thst might receive a line numbers or calls to the above
 #'   functions. its `fun` and `n` arguments are themselves passed internally to `expr_defines()`
 #'   to locate the function definition.
+#'
+#' When used with `edit_*()`. functions (the only place where these should be used),
+#' these functions and the stringr helpers `boundary()`, `coll()`, `fixed()` and `regex()`
+#' can be use without attaching the package or using the `pkg::fun()` notation.
+#'
 #' @param code,var,fun Target to match exactly, or pattern such as returned by `stringr::regex()`
 #'   or other [stringr modifiers][stringr::modifiers].
 #' @param n index of the match to consider. By default all, to choose the last use `Inf`.

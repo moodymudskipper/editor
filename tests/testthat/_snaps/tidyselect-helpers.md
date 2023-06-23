@@ -8,7 +8,7 @@
       edit_remove(file, 2:3)
       edit_remove(file, expr_defines("with_equal"))
       edit_remove(file, expr_defines("with_arrow"))
-      edit_replace(file, toupper, expr_calls(stringr::regex("a"), 3))
+      edit_replace(file, toupper, expr_calls(regex("a"), 3))
       edit_replace(file, toupper, expr_calls("a"))
       edit_remove(file, in_function("fun1", expr_defines("world")))
       edit_remove(file, in_function("fun1", in_function("fun2", expr_defines("again"))))
