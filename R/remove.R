@@ -10,7 +10,7 @@ edit_remove <- function(path, selection, style = TRUE) {
 code_remove <- function(old, selection, style = TRUE) {
   location <- code_select(old, {{ selection }})
   if (!length(location)) {
-    rlang::abort("Location not found")
+    abort("Location not found")
   }
   code <- old[-location]
   if (style) code <- styler::style_text(code)

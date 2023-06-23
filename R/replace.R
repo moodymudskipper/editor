@@ -10,19 +10,19 @@ edit_replace <- function(path, code, selection, style = TRUE) {
 code_replace <- function(old, new, selection, style = TRUE) {
   location <- code_select(old, {{ selection }})
   if (!length(location)) {
-    rlang::abort("Location not found")
+    abort("Location not found")
   }
   if (!identical(location, min(location):max(location))) {
-    rlang::abort("Can't replace code when matched lines are not consecutive")
+    abort("Can't replace code when matched lines are not consecutive")
   }
 
-  if (is.language(new)) {
-    new <- deparse(new)
-  } else if (rlang::is_formula(new)) {
+  if (rlang::is_formula(new)) {
     new <- rlang::as_function(new)
     new <- new(old[location])
   } else if (is.function(new)) {
     new <- new(old[location])
+  } else if (is.language(new)) {
+    new <- deparse(new)
   }
 
   old <- old[-location]

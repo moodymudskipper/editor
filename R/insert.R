@@ -21,22 +21,34 @@ edit_insert <- function(path, code, before = NULL, after = NULL, style = TRUE) {
 }
 
 code_insert <- function(old, new, before = NULL, after = NULL, style = TRUE) {
-  if (missing(before) && missing(after)) {
-    rlang::abort("Provide either `before`, or `after`. None were provided")
-  } else if (!missing(before) && !missing(after)) {
-    rlang::abort("Provide either `before`, or `after`. Both were provided")
+  before <- enquo(before)
+  after <- enquo(after)
+
+  if (rlang::quo_is_null(before) && rlang::quo_is_null(after)) {
+    abort("Provide either `before`, or `after`. None were provided")
+  } else if (!rlang::quo_is_null(before) && !rlang::quo_is_null(after)) {
+    abort("Provide either `before`, or `after`. Both were provided")
   }
 
-  if (!missing(before)) {
-    location <- code_select(old, {{ before }})
-    location <- min(location) - 1
+  if (!rlang::quo_is_null(before)) {
+    location0 <- code_select(old, !!before)
+    location <- min(location0) - 1
   } else {
-    location <- code_select(old, {{ after }})
-    location <- max(location)
+    location0 <- code_select(old, !!after)
+    location <- max(location0)
   }
 
   if (!length(location)) {
-    rlang::abort("Location not found")
+    abort("Location not found")
+  }
+
+  if (rlang::is_formula(new)) {
+    new <- rlang::as_function(new)
+    new <- new(old[location0])
+  } else if (is.function(new)) {
+    new <- new(old[location])
+  } else if (is.language(new)) {
+    new <- deparse(new)
   }
 
   l <- length(old)

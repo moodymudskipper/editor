@@ -40,7 +40,7 @@ line_matches <- function(code, n = NULL) {
 expr_defines <- function(var, n = NULL) {
   # FIXME assert input
   old_code <- tidyselect::peek_data()
-  parsed_data <- getParseData(parse(text = old_code), includeText = TRUE)
+  parsed_data <- getParseData(parse(text = old_code, keep.source = TRUE), includeText = TRUE)
 
   top_level_ids <- parsed_data$id[parsed_data$parent == 0]
   top_level_assignments <- subset(
@@ -76,7 +76,7 @@ expr_defines <- function(var, n = NULL) {
 expr_calls <- function(fun, n = NULL) {
   # FIXME assert input
   old_code <- tidyselect::peek_data()
-  parsed_data <- getParseData(parse(text = old_code), includeText = TRUE)
+  parsed_data <- getParseData(parse(text = old_code, keep.source = TRUE), includeText = TRUE)
 
   top_level_ids <- parsed_data$id[parsed_data$parent == 0]
   top_level_calls <- subset(parsed_data, parent ==  0 & token == "expr")
@@ -107,13 +107,13 @@ in_function <- function(fun, selection, n = NULL) {
   old_code <- tidyselect::peek_data()
   function_loc <- code_select(old_code, expr_defines(fun, n))
   function_code <- old_code[function_loc]
-  parsed_data <- getParseData(parse(text = function_code), includeText = TRUE)
+  parsed_data <- getParseData(parse(text = function_code, keep.source = TRUE), includeText = TRUE)
   expr_id <- parsed_data$id[parsed_data$parent == 0]
   fun_call_id <- tail(parsed_data$id[parsed_data$parent == expr_id], 1)
   body_id <- tail(parsed_data$id[parsed_data$parent == fun_call_id], 1)
   parsed_data <- subset(parsed_data, parent == body_id)
   if (parsed_data$text[[1]] != "{") {
-    rlang::abort("`in_function()` can't be used when the body of the function doesn't use curly braces")
+    abort("`in_function()` can't be used when the body of the function doesn't use curly braces")
   }
   parsed_data <- parsed_data[-c(1, nrow(parsed_data)),]
   body_loc <- seq.int(min(parsed_data$line1), max(parsed_data$line2))
