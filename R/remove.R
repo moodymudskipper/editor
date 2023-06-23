@@ -1,16 +1,10 @@
-#' Remove code from file
-#'
-#' @param path String. Path to file to edit
-#' @param code Character vector. Code to insert
-#' @param before,after <tidy-select> using {editor} helpers. destination of `code`, use either, not both and not not none.
-#' @param style Boolean, wether to style the output. Useful because it's hard to monitor
-#'   indention, so set to `TRUE` by default
-#'
 #' @export
+#' @rdname edit-file
 edit_remove <- function(path, selection, style = TRUE) {
   old_code <- readLines(path)
   new_code <- code_remove(readLines(path), {{ selection }}, style)
   writeLines(new_code, path)
+  invisible(NULL)
 }
 
 code_remove <- function(old, selection, style = TRUE) {

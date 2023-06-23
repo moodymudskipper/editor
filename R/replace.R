@@ -1,16 +1,10 @@
-#' Insert code in file
-#'
-#' @param path String. Path to file to edit
-#' @param code Character vector. Code to insert
-#' @param before,after <tidy-select> using {editor} helpers. destination of `code`, use either, not both and not not none.
-#' @param style Boolean, wether to style the output. Useful because it's hard to monitor
-#'   indention, so set to `TRUE` by default
-#'
 #' @export
+#' @rdname edit-file
 edit_replace <- function(path, code, selection, style = TRUE) {
   old_code <- readLines(path)
   new_code <- code_replace(readLines(path), code, {{ selection }}, style)
   writeLines(new_code, path)
+  invisible(NULL)
 }
 
 code_replace <- function(old, new, selection, style = TRUE) {
@@ -22,9 +16,12 @@ code_replace <- function(old, new, selection, style = TRUE) {
     rlang::abort("Can't replace code when matched lines are not consecutive")
   }
 
-
-  if (!is.character(new)) {
+  if (is.language(new)) {
+    new <- deparse(new)
+  } else if (rlang::is_formula(new)) {
     new <- rlang::as_function(new)
+    new <- new(old[location])
+  } else if (is.function(new)) {
     new <- new(old[location])
   }
 

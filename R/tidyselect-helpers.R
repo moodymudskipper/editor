@@ -1,13 +1,25 @@
-#' Location of matching code
+#' {editor} selection helpers
 #'
-#' Find matching line, by default we look for perfectly matching lines after trimming
-#' the leading and trailing white spaces, stringr modifiers can be used (see `?stringr::modifiers`)
-#' and then `stringr::str_detect()` is used.
+#' @description
+#' These are to be used in `selection`, `before` or `after` arguments of the
+#' [editing functions][edit-file], or in `in_function()` described below.
+#' They return the indexes of the matching lines in the file.
 #'
-#' @param code code to match, or pattern such as returned by `stringr::regex()`
-#'   or other modifiers.
-#'
+#' * `line_matches()` matches lines of code and return stheir indices
+#' * `expr_defines()` matches a variables being defined and returns the indices of the
+#'   lines spanned by the definitions
+#' * `expr_calls()` matches a function being called at the top level and returns the indices of the
+#'   lines spanned by the call
+#' * `in_function()` is used to restrict the scope of a selection to a function definition,
+#'   it has a `selection` argument thst might receive a line numbers or calls to the above
+#'   functions. its `fun` and `n` arguments are themselves passed internally to `expr_defines()`
+#'   to locate the function definition.
+#' @param code,var,fun Target to match exactly, or pattern such as returned by `stringr::regex()`
+#'   or other [stringr modifiers][stringr::modifiers].
+#' @param n index of the match to consider. By default all, to choose the last use `Inf`.
+#' @return An integer vector
 #' @export
+#' @name editor_tidy_select
 line_matches <- function(code, n = NULL) {
   # FIXME assert input
   old_code <- tidyselect::peek_data()
@@ -23,10 +35,7 @@ line_matches <- function(code, n = NULL) {
   loc
 }
 
-#' Location of matching variable definitions
-#' @param var variable name to match, or pattern such as returned by `stringr::regex()`
-#'   or other modifiers.
-#'
+#' @rdname editor_tidy_select
 #' @export
 expr_defines <- function(var, n = NULL) {
   # FIXME assert input
@@ -62,10 +71,7 @@ expr_defines <- function(var, n = NULL) {
   loc
 }
 
-#' Location of matching call
-#' @param var function name to match, or pattern such as returned by `stringr::regex()`
-#'   or other modifiers.
-#'
+#' @rdname editor_tidy_select
 #' @export
 expr_calls <- function(fun, n = NULL) {
   # FIXME assert input
@@ -94,12 +100,8 @@ expr_calls <- function(fun, n = NULL) {
   loc
 }
 
-#' Locate code inside a function definition
-#'
-#' @param fun,n passed to `expr_defines()` to locate a function definition
-#' @param selection selection to apply inside the function's body
-#'
 #' @export
+#' @name editor_tidy_select
 in_function <- function(fun, selection, n = NULL) {
   # FIXME assert input
   old_code <- tidyselect::peek_data()
