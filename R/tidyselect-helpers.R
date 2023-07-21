@@ -86,7 +86,10 @@ expr_calls <- function(fun, n = NULL) {
   top_level_ids <- parsed_data$id[parsed_data$parent == 0]
   top_level_calls <- subset(parsed_data, parent ==  0 & token == "expr")
   funs <- lapply(top_level_calls$id, function(x) head(subset(parsed_data, parent ==  x), 1))
-  match_lgl <- sapply(funs, function(x) subset(parsed_data, parent ==  x$id)$token == "SYMBOL_FUNCTION_CALL")
+  match_lgl <- sapply(funs, function(x) {
+    token <- subset(parsed_data, parent ==  x$id)$token
+    length(token) == 1 && token == "SYMBOL_FUNCTION_CALL"
+    })
   fun_nms <- sapply(funs, `[[`, "text")
   if (inherits(fun, "stringr_pattern")) {
     match_lgl <- match_lgl & stringr::str_detect(fun_nms, fun)
